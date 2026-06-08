@@ -1,6 +1,7 @@
 package com.mphasis.fundtransfer.auth.app.entity;
 
 import com.mphasis.fundtransfer.auth.api.AuthAccountStatus;
+import com.mphasis.fundtransfer.auth.api.AuthRole;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -23,6 +24,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "account_status", nullable = false)
     private AuthAccountStatus accountStatus = AuthAccountStatus.Active;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private AuthRole role = AuthRole.CUSTOMER;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -75,6 +80,14 @@ public class User {
 
     public void setAccountStatus(AuthAccountStatus accountStatus) {
         this.accountStatus = accountStatus;
+    }
+
+    public AuthRole getRole() {
+        return role;
+    }
+
+    public void setRole(AuthRole role) {
+        this.role = role;
     }
 
     public Instant getCreatedAt() {

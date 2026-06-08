@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
+import java.util.List;
 import java.util.Date;
 
 @Component
@@ -31,6 +32,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(user.getId().toString())
                 .claim("loginId", user.getLoginId())
+                .claim("roles", List.of("ROLE_" + user.getRole().name()))
                 .claim("accountStatus", user.getAccountStatus().name())
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiration)
