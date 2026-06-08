@@ -1,4 +1,4 @@
-package com.example.mphasis.aas.api.dto.response;
+package com.mphasis.fundtransfer.auth.api.dto.response;
 
 import lombok.Data;
 

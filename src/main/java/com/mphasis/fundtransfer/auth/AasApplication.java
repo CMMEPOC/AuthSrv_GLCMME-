@@ -1,4 +1,4 @@
-package com.example.mphasis.aas;
+package com.mphasis.fundtransfer.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
