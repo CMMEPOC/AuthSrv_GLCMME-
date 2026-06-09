@@ -95,6 +95,4 @@ public class SecurityConfig {
         byte[] decoded = Base64.getDecoder().decode(encoded);
         System.out.println("\n decoded:- " + new String(decoded));
     }
-
-
 }

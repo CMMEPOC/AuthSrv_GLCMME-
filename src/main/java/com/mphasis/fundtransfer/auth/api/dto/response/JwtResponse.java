@@ -1,74 +1,52 @@
 package com.mphasis.fundtransfer.auth.api.dto.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Setter
+@Getter
 public class JwtResponse {
 
-    private String token;
+    private String accessToken;
+    private String refreshToken;
     private String tokenType = "Bearer";
     private Instant expiresAt;
-    private UUID userId;
-    private String loginId;
-    private List<String> roles;
+    private UserInfo user;
 
     public JwtResponse() {
     }
 
-    public JwtResponse(String token, Instant expiresAt, UUID userId, String loginId, List<String> roles) {
-        this.token = token;
+    public JwtResponse(String accessToken,
+                       String refreshToken,
+                       Instant expiresAt,
+                       UserInfo user) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.expiresAt = expiresAt;
-        this.userId = userId;
-        this.loginId = loginId;
-        this.roles = roles;
+        this.user = user;
     }
 
-    public String getToken() {
-        return token;
+    @Setter
+    @Getter
+    public static class UserInfo {
+        private UUID id;
+        private String username;
+        private List<String> roles;
+        private String accountStatus;
+
+        public UserInfo() {
+        }
+
+        public UserInfo(UUID id, String username, List<String> roles, String accountStatus) {
+            this.id = id;
+            this.username = username;
+            this.roles = roles;
+            this.accountStatus = accountStatus;
+        }
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public Instant getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(Instant expiresAt) {
-        this.expiresAt = expiresAt;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
 }

@@ -11,7 +11,7 @@ spring:
     hibernate:
       ddl-auto: update
 jwt:
-  # HS512 requires a secret of at least 64 bytes. Override this in real environments.
   secret: ${JWT_SECRET:AWOum5UmQdECMaapOD/HiEZfCMbKZG0EYQ0Vd7rwUIS8JWbrdCmBRbvaRKSPziPLAYv/6w3eN/7opl4xw89Iyw==}
+  #3600000 = 60mins
   expiration-ms: ${JWT_EXPIRATION_MS:3600000}
-
+  refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}

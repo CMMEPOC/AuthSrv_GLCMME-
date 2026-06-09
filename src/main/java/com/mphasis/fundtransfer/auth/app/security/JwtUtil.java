@@ -22,10 +22,21 @@ public class JwtUtil {
     @Value("${jwt.expiration-ms}")
     private long jwtExpirationMs;
 
-    public String generateToken(User user) {
+    @Value("${jwt.refresh-expiration-ms}")
+    private long refreshExpirationMs;
+
+    public String generateAccessToken(User user) {
+        return generateToken(user, jwtExpirationMs, "access");
+    }
+
+    public String generateRefreshToken(User user) {
+        return generateToken(user, refreshExpirationMs, "refresh");
+    }
+
+    private String generateToken(User user, long expirationMs, String tokenUse) {
         Instant now = Instant.now();
         Date issuedAt = Date.from(now);
-        Date expiration = Date.from(now.plusMillis(jwtExpirationMs));
+        Date expiration = Date.from(now.plusMillis(expirationMs));
 
         Key signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
 
@@ -34,6 +45,7 @@ public class JwtUtil {
                 .claim("loginId", user.getLoginId())
                 .claim("roles", List.of("ROLE_" + user.getRole().name()))
                 .claim("accountStatus", user.getAccountStatus().name())
+                .claim("tokenUse", tokenUse)
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiration)
                 .signWith(signingKey, SignatureAlgorithm.HS512)

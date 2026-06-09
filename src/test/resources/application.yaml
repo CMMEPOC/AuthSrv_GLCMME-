@@ -11,3 +11,4 @@ spring:
 jwt:
   secret: test-secret-test-secret-test-secret-test-secret-test-secret-test-secret-1234
   expiration-ms: 3600000
+  refresh-expiration-ms: 604800000

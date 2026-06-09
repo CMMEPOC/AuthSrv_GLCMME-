@@ -43,12 +43,18 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String role = "ROLE_" + user.getRole().name();
-        return new JwtResponse(
-                jwtUtil.generateToken(user),
-                jwtUtil.getExpirationInstant(),
+        JwtResponse.UserInfo userInfo = new JwtResponse.UserInfo(
                 user.getId(),
                 user.getLoginId(),
-                List.of(role)
+                List.of(role),
+                user.getAccountStatus().name()
+        );
+
+        return new JwtResponse(
+                jwtUtil.generateAccessToken(user),
+                jwtUtil.generateRefreshToken(user),
+                jwtUtil.getExpirationInstant(),
+                userInfo
         );
     }
 }
