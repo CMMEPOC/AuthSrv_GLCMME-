@@ -1,38 +1,46 @@
 package com.mphasis.fundtransfer.auth.app.entity;
 
 import com.mphasis.fundtransfer.auth.api.AuthAccountStatus;
-import com.mphasis.fundtransfer.auth.api.AuthRole;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "auth_users")
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue
+    @Column(name = "user_id")
     private UUID id;
 
-    @Column(name = "login_id", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String loginId;
 
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "account_status", nullable = false)
-    private AuthAccountStatus accountStatus = AuthAccountStatus.Active;
+    @Column(name = "status", nullable = false)
+    private AuthAccountStatus accountStatus = AuthAccountStatus.ACTIVE;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private AuthRole role = AuthRole.CUSTOMER;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private Instant updatedAt;
 
     public User() {
@@ -82,12 +90,19 @@ public class User {
         this.accountStatus = accountStatus;
     }
 
-    public AuthRole getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(AuthRole role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<String> getRoleNames() {
+        return roles.stream()
+                .map(Role::getName)
+                .map(roleName -> roleName.startsWith("ROLE_") ? roleName : "ROLE_" + roleName)
+                .collect(Collectors.toList());
     }
 
     public Instant getCreatedAt() {

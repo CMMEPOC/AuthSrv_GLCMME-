@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
-        if (user.getAccountStatus() == AuthAccountStatus.Inactive) {
+        if (user.getAccountStatus() == AuthAccountStatus.INACTIVE) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Account is inactive");
         }
 
@@ -42,11 +42,11 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
-        String role = "ROLE_" + user.getRole().name();
+        List<String> roles = user.getRoleNames();
         JwtResponse.UserInfo userInfo = new JwtResponse.UserInfo(
                 user.getId(),
                 user.getLoginId(),
-                List.of(role),
+                roles,
                 user.getAccountStatus().name()
         );
 
