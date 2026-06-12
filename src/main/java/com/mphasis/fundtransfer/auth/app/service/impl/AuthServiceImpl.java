@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse login(LoginRequest request) {
         User user = userRepository.findByLoginId(request.getLoginId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized"));
 
         if (user.getAccountStatus() == AuthAccountStatus.INACTIVE) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Account is inactive");
