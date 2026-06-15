@@ -1,10 +1,13 @@
+debug: false
+server:
+  port: 8080
 spring:
   application:
     name: authentication
   datasource:
     url: jdbc:postgresql://localhost:5432/fundtransfer_db
-    username: admin
-    password: admin
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
 
   jpa:

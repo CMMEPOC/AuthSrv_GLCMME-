@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/v1/auth/login",
+                                "/api/v1/auth/rbac/user/{user_id}",
                                 "/actuator/health",
                                 "/actuator/info",
                                 "/v3/api-docs/**",
