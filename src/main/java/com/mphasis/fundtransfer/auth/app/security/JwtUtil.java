@@ -1,0 +1,59 @@
+package com.mphasis.fundtransfer.auth.app.security;
+
+import com.mphasis.fundtransfer.auth.api.constants.AuthRole;
+import com.mphasis.fundtransfer.auth.app.entity.UserEntity;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.time.Instant;
+import java.util.List;
+import java.util.Date;
+
+@Component
+public class JwtUtil {
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${jwt.expiration-ms}")
+    private long jwtExpirationMs;
+
+    @Value("${jwt.refresh-expiration-ms}")
+    private long refreshExpirationMs;
+
+    public String generateAccessToken(UserEntity user) {
+        return generateToken(user, jwtExpirationMs, "access");
+    }
+
+    public String generateRefreshToken(UserEntity user) {
+        return generateToken(user, refreshExpirationMs, "refresh");
+    }
+
+    private String generateToken(UserEntity user, long expirationMs, String tokenUse) {
+        Instant now = Instant.now();
+        Date issuedAt = Date.from(now);
+        Date expiration = Date.from(now.plusMillis(expirationMs));
+
+        Key signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+
+        return Jwts.builder()
+                .setSubject(user.getUserId().toString())
+                .claim("loginId", user.getUsername())
+                .claim("roles", List.of("ROLE_" + AuthRole.CUSTOMER))
+                .claim("accountStatus", user.getAccountStatus().name())
+                .claim("tokenUse", tokenUse)
+                .setIssuedAt(issuedAt)
+                .setExpiration(expiration)
+                .signWith(signingKey, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public Instant getExpirationInstant() {
+        return Instant.now().plusMillis(jwtExpirationMs);
+    }
+}
