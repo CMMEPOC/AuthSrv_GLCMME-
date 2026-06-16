@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 public class AuthController implements AuthInterface {
 
     private AuthService authService;
@@ -27,7 +27,7 @@ public class AuthController implements AuthInterface {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/rbac/user/{user_id}")
+    @PostMapping("/user/{user_id}")
     public ResponseEntity<RBACResponse> checkRbac( @PathVariable(name="user_id", required = true) String userName,
             @Valid @RequestBody RBACRequestDto rbacRequestDto){
         RBACResponse rbacResponse = authService.checkRBAC(userName, rbacRequestDto);
