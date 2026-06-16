@@ -27,7 +27,7 @@ public class AuthController implements AuthInterface {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/user/{user_id}")
+    @PostMapping("/rbac/user/{user_id}")
     public ResponseEntity<RBACResponse> checkRbac( @PathVariable(name="user_id", required = true) String userName,
             @Valid @RequestBody RBACRequestDto rbacRequestDto){
         RBACResponse rbacResponse = authService.checkRBAC(userName, rbacRequestDto);
