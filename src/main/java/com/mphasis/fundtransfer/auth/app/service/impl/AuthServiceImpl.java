@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -47,8 +48,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse login(LoginRequestDto request) {
         UserEntity user = userRepository.findByUsername(request.getLoginId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
-        if (user.getAccountStatus() == AuthAccountStatus.INACTIVE) {
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized"));
+        if (Objects.equals(user.getAccountStatus(), AuthAccountStatus.INACTIVE)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Account is inactive");
         }
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
