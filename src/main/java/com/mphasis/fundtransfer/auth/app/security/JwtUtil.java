@@ -44,7 +44,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(user.getUserId().toString())
                 .claim("loginId", user.getUsername())
-                .claim("roles", List.of("ROLE_" + AuthRole.CUSTOMER))
+                .claim("roles", List.of("ROLE_" + AuthRole.USER))
                 .claim("accountStatus", user.getAccountStatus().name())
                 .claim("tokenUse", tokenUse)
                 .setIssuedAt(issuedAt)

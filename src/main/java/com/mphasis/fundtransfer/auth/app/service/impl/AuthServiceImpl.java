@@ -28,6 +28,8 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private static final String ADMIN = "ADMIN";
+    private static final String USER = "USER";
 
     public AuthServiceImpl(UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
@@ -55,7 +57,19 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
-        String role = "ROLE_" + AuthRole.CUSTOMER;
+        UserRoleEntity userRoleEntity = userRoleRepository.findByUserRoleEmbedding_UserId(user.getUserId());
+        if(userRoleEntity==null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
+        }
+        Integer roleId = userRoleEntity.getUserRoleEmbedding().getRoleId();
+        RoleEntity roleEntity = roleRepository.findByRoleId(roleId);
+        String role=null;
+        if(roleEntity.getRoleName().equals(ADMIN)){
+            role = "ROLE_" + AuthRole.ADMIN;
+        }
+        else if(roleEntity.getRoleName().equals(USER)){
+            role = "ROLE_" + AuthRole.USER;
+        }
         JwtResponse.UserInfo userInfo = new JwtResponse.UserInfo(
                 user.getUserId(),
                 user.getUsername(),
