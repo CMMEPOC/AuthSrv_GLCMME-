@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "role")
 public class RoleEntity {
     @Id
     @GeneratedValue
+    @Column(name="role_id")
     private Integer roleId;
 
     @Column(name="role_name", nullable=false)
