@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private static final String ADMIN = "ADMIN";
-    private static final String CUSTOMER = "CUSTOMER";
+    private static final String USER = "USER";
 
     public AuthServiceImpl(UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
@@ -67,8 +67,8 @@ public class AuthServiceImpl implements AuthService {
         if(roleEntity.getRoleName().equals(ADMIN)){
             role = "ROLE_" + AuthRole.ADMIN;
         }
-        else if(roleEntity.getRoleName().equals(CUSTOMER)){
-            role = "ROLE_" + AuthRole.CUSTOMER;
+        else if(roleEntity.getRoleName().equals(USER)){
+            role = "ROLE_" + AuthRole.USER;
         }
         JwtResponse.UserInfo userInfo = new JwtResponse.UserInfo(
                 user.getUserId(),
